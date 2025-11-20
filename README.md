@@ -9,7 +9,9 @@ Sistema completo basado en Docker para **transcribir y formatear archivos de aud
 - 🎯 **Reproducible** - Clone y ejecute en minutos
 - 🔄 **Inteligente** - Salta archivos ya transcritos automáticamente
 - 📝 **Formateo Profesional** - Usa LLM local (Ollama) para limpiar y estructurar el texto
+- 📊 **Análisis Automático** - Genera resúmenes, puntos clave y temas principales
 - 🌍 **Multiidioma** - Soporta español, inglés y más de 90 idiomas
+- ⚙️ **Totalmente Configurable** - Activa/desactiva cada función según necesites
 
 ## 🚀 Inicio Rápido
 
@@ -90,7 +92,7 @@ Si **no tienes Docker instalado**, sigue estos pasos:
 2. Ejecuta `.\run.ps1` en PowerShell
 3. Encuentra las transcripciones en `output/`
 
-### Ejemplo
+### Ejemplo Completo
 
 ```powershell
 # Estructura antes
@@ -101,14 +103,34 @@ input/
 # Ejecutar
 .\run.ps1
 
-# Estructura después
+# Estructura después (con análisis completo habilitado)
 output/
-├── entrevista_transcripcion.txt          # Texto limpio
-├── entrevista_transcripcion_detallada.txt # Con timestamps
-├── entrevista_transcripcion_formateada.txt # Formateado con LLM
+├── entrevista_transcripcion.txt               # Transcripción limpia
+├── entrevista_transcripcion_detallada.txt     # Con timestamps
+├── entrevista_transcripcion_formateada.txt    # Formateado con LLM
+├── entrevista_resumen.txt                     # 📊 Resumen ejecutivo
+├── entrevista_puntos_clave.txt                # 🔑 Puntos importantes
+├── entrevista_temas.txt                       # 🏷️ Temas principales
 ├── conferencia_transcripcion.txt
-└── ...
+├── conferencia_transcripcion_detallada.txt
+├── conferencia_transcripcion_formateada.txt
+├── conferencia_resumen.txt                    # 📊 Resumen ejecutivo
+├── conferencia_puntos_clave.txt               # 🔑 Puntos importantes
+└── conferencia_temas.txt                      # 🏷️ Temas principales
 ```
+
+### 📊 Archivos Generados por Audio
+
+Por cada archivo de audio, el sistema genera **hasta 6 archivos de salida**:
+
+| Archivo | Descripción | Siempre se genera |
+|---------|-------------|-------------------|
+| `*_transcripcion.txt` | Texto limpio sin timestamps | ✅ Sí |
+| `*_transcripcion_detallada.txt` | Con timestamps de Whisper | ✅ Sí |
+| `*_transcripcion_formateada.txt` | Formateado y estructurado con LLM | ✅ Sí (si FORMATTER activo) |
+| `*_resumen.txt` | Resumen ejecutivo de 3-5 párrafos | ⚙️ Configurable (`ENABLE_SUMMARY`) |
+| `*_puntos_clave.txt` | Lista de puntos más importantes | ⚙️ Configurable (`ENABLE_KEY_POINTS`) |
+| `*_temas.txt` | Temas principales discutidos | ⚙️ Configurable (`ENABLE_TOPICS`) |
 
 ## ⚙️ Configuración
 
@@ -126,7 +148,35 @@ FORMATTER=ollama      # ollama (local) o gemini (API)
 
 # Modelo de Ollama
 OLLAMA_MODEL=llama3.2:3b  # llama3.2:1b, llama3:8b, mistral
+
+# Análisis avanzado (generar resúmenes y análisis automáticamente)
+ENABLE_SUMMARY=true      # Resumen ejecutivo
+ENABLE_KEY_POINTS=true   # Puntos clave
+ENABLE_TOPICS=true       # Temas principales
 ```
+
+### 🎯 Configurar Análisis Avanzado
+
+El sistema puede generar **automáticamente** análisis adicionales de cada transcripción. Controla qué se genera:
+
+```env
+# ¿Quieres solo la transcripción básica? Desactiva todo
+ENABLE_SUMMARY=false
+ENABLE_KEY_POINTS=false
+ENABLE_TOPICS=false
+
+# ¿Quieres análisis completo? Activa todo (recomendado)
+ENABLE_SUMMARY=true      # Genera resumen ejecutivo de 3-5 párrafos
+ENABLE_KEY_POINTS=true   # Extrae los puntos más importantes (lista)
+ENABLE_TOPICS=true       # Identifica temas principales discutidos
+
+# ¿Solo resumen? Activa solo lo que necesites
+ENABLE_SUMMARY=true
+ENABLE_KEY_POINTS=false
+ENABLE_TOPICS=false
+```
+
+**⏱️ Tiempo adicional:** Cada análisis toma ~2-5 minutos extra por audio (dependiendo de duración).
 
 ### Comparación de Modelos Whisper
 

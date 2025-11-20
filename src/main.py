@@ -87,6 +87,90 @@ def main():
                 else:
                     formatter.process_directory(output_dir, output_dir)
                     logger.info("\nFormateo completado con Ollama.\n")
+                    
+                    # PASO 3: Análisis avanzado (si está habilitado)
+                    enable_summary = os.environ.get('ENABLE_SUMMARY', 'false').lower() == 'true'
+                    enable_key_points = os.environ.get('ENABLE_KEY_POINTS', 'false').lower() == 'true'
+                    enable_topics = os.environ.get('ENABLE_TOPICS', 'false').lower() == 'true'
+                    
+                    if enable_summary or enable_key_points or enable_topics:
+                        logger.info("\n" + "="*80)
+                        logger.info("PASO 3: ANÁLISIS AVANZADO DE TRANSCRIPCIONES")
+                        logger.info("="*80 + "\n")
+                        
+                        try:
+                            from analyze_ollama import TranscriptionAnalyzer
+                            
+                            analyzer = TranscriptionAnalyzer(
+                                ollama_url=ollama_host,
+                                model=ollama_model
+                            )
+                            
+                            # Buscar todas las transcripciones formateadas
+                            formatted_files = list(output_dir.glob("*_transcripcion_formateada.txt"))
+                            
+                            if not formatted_files:
+                                logger.warning("No se encontraron transcripciones formateadas para analizar.")
+                            else:
+                                logger.info(f"Analizando {len(formatted_files)} transcripción(es)...\n")
+                                
+                                for formatted_file in formatted_files:
+                                    logger.info(f"Analizando: {formatted_file.name}")
+                                    
+                                    try:
+                                        # Leer transcripción
+                                        with open(formatted_file, 'r', encoding='utf-8') as f:
+                                            transcription = f.read()
+                                        
+                                        base_name = formatted_file.stem.replace('_transcripcion_formateada', '')
+                                        
+                                        # Generar resumen si está habilitado
+                                        if enable_summary:
+                                            summary = analyzer.generate_summary(transcription)
+                                            if summary:
+                                                summary_file = output_dir / f"{base_name}_resumen.txt"
+                                                with open(summary_file, 'w', encoding='utf-8') as f:
+                                                    f.write("=" * 80 + "\n")
+                                                    f.write("RESUMEN EJECUTIVO\n")
+                                                    f.write("=" * 80 + "\n\n")
+                                                    f.write(summary)
+                                                logger.info(f"  ✓ Resumen guardado: {summary_file.name}")
+                                        
+                                        # Extraer puntos clave si está habilitado
+                                        if enable_key_points:
+                                            key_points = analyzer.generate_key_points(transcription)
+                                            if key_points:
+                                                points_file = output_dir / f"{base_name}_puntos_clave.txt"
+                                                with open(points_file, 'w', encoding='utf-8') as f:
+                                                    f.write("=" * 80 + "\n")
+                                                    f.write("PUNTOS CLAVE\n")
+                                                    f.write("=" * 80 + "\n\n")
+                                                    f.write(key_points)
+                                                logger.info(f"  ✓ Puntos clave guardados: {points_file.name}")
+                                        
+                                        # Identificar temas si está habilitado
+                                        if enable_topics:
+                                            topics = analyzer.generate_topics(transcription)
+                                            if topics:
+                                                topics_file = output_dir / f"{base_name}_temas.txt"
+                                                with open(topics_file, 'w', encoding='utf-8') as f:
+                                                    f.write("=" * 80 + "\n")
+                                                    f.write("TEMAS PRINCIPALES\n")
+                                                    f.write("=" * 80 + "\n\n")
+                                                    f.write(topics)
+                                                logger.info(f"  ✓ Temas guardados: {topics_file.name}")
+                                        
+                                        logger.info("")
+                                        
+                                    except Exception as e:
+                                        logger.error(f"  ✗ Error al analizar {formatted_file.name}: {e}")
+                                
+                                logger.info("Análisis completado.\n")
+                        
+                        except Exception as e:
+                            logger.error(f"Error en el análisis avanzado: {e}")
+                            logger.warning("Continuando sin análisis.")
+            
             except Exception as e:
                 logger.error(f"Error al usar Ollama: {e}")
                 logger.warning("Saltando formateo.")
