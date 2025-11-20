@@ -11,6 +11,7 @@ Sistema completo basado en Docker para **transcribir y formatear archivos de aud
 - **Formateo Profesional** - Usa LLM local (Ollama) para limpiar y estructurar el texto
 - **Análisis Automático** - Genera resúmenes, puntos clave y temas principales
 - **Multiidioma** - Soporta español, inglés y más de 90 idiomas
+- **🇨🇱 Español Chileno Optimizado** - Detecta modismos como "cachai", "po", "weón", "bacán", etc.
 - **Totalmente Configurable** - Activa/desactiva cada función según necesites
 
 ## 🚀 Inicio Rápido
@@ -47,21 +48,22 @@ Sistema completo basado en Docker para **transcribir y formatear archivos de aud
 > 
 > **En resumen:** Funciona en cualquier PC moderna. Si tienes GPU se usará automáticamente (más rápido), si no, usará CPU (un poco más lento pero igual de confiable).
 
-### Instalación en 3 Pasos
+### Instalación en 2 Pasos
 
 ```powershell
 # 1. Clonar repositorio (o descargar ZIP desde GitHub)
-git clone https://github.com/TU_USUARIO/NOMBRE_REPO.git
-cd NOMBRE_REPO
+git clone https://github.com/Rodotasso/audio-transcriptor-whisper-ollama.git
+cd audio-transcriptor-whisper-ollama
 
-# 2. Configurar (copia la plantilla de configuración)
-Copy-Item .env.example .env
-
-# 3. Ejecutar (¡ya está!)
+# 2. Ejecutar menú interactivo
 .\run.ps1
 ```
 
-**¡Listo!** El sistema descargará los modelos automáticamente en la primera ejecución.
+**¡Eso es todo!** El menú interactivo te guiará paso a paso:
+- Primera instalación automática
+- Descarga de modelos (solo una vez)
+- Configuración asistida
+- Opciones de transcripción
 
 > **Primera ejecución:** El script `run.ps1` descargará automáticamente:
 > - Modelos de Whisper (~1-5GB según configuración)
@@ -98,13 +100,67 @@ Si **no tienes Docker instalado**, sigue estos pasos:
 
 ---
 
-## Uso
+## 📖 Uso
 
-### Transcribir Audio
+### Menú Interactivo
 
-1. Coloca archivos de audio (`.mp3`, `.m4a`, `.wav`, etc.) en la carpeta `input/`
-2. Ejecuta `.\run.ps1` en PowerShell
-3. Encuentra las transcripciones en `output/`
+Al ejecutar `.\run.ps1` verás un menú con las siguientes opciones:
+
+```
+========================================
+  🎙️  TRANSCRIPTOR DE AUDIO
+  Whisper + Ollama (100% Local)
+========================================
+
+MENÚ PRINCIPAL
+
+1. 🚀 Transcribir y Formatear (Proceso Completo)
+2. 🎤 Solo Transcribir (Whisper)
+3. ✨ Solo Formatear (Ollama)
+4. 🔧 Configuración y Mantenimiento
+5. 📊 Ver Estado del Sistema
+6. 🗑️  Limpiar Archivos de Salida
+7. ❌ Salir
+```
+
+### Opción 1: Proceso Completo (Recomendado)
+
+**Uso típico:**
+1. Coloca archivos de audio (`.mp3`, `.m4a`, `.wav`, etc.) en `input/`
+2. Ejecuta `.\run.ps1`
+3. Selecciona opción **1** (Proceso Completo)
+4. Encuentra los resultados en `output/`
+
+**Genera automáticamente:**
+- ✅ Transcripción básica
+- ✅ Transcripción detallada (con timestamps)
+- ✅ Texto formateado y limpio
+- ✅ Resumen ejecutivo
+- ✅ Puntos clave
+- ✅ Temas principales
+
+### Opción 2: Solo Transcribir
+
+Usa solo Whisper para transcribir. Ideal si:
+- Solo necesitas el texto crudo
+- Quieres formatear manualmente después
+- Estás probando diferentes audios
+
+### Opción 3: Solo Formatear
+
+Usa solo Ollama para formatear transcripciones existentes. Ideal si:
+- Ya tienes transcripciones de una ejecución anterior
+- Modificaste la configuración de formateo
+- Quieres regenerar solo los análisis
+
+### Opción 4: Configuración
+
+Submenú con opciones avanzadas:
+- **Primera Instalación:** Construcción completa (solo primera vez)
+- **Reconstruir Imagen:** Después de cambiar código
+- **Editar .env:** Cambiar configuración
+- **Actualizar Modelo Ollama:** Forzar re-descarga
+- **Limpieza Completa:** Eliminar contenedores y volúmenes
 
 ### Ejemplo Completo
 
@@ -114,23 +170,24 @@ input/
 ├── entrevista.m4a
 └── conferencia.mp3
 
-# Ejecutar
+# Ejecutar menú
 .\run.ps1
+# Seleccionar: 1 (Proceso Completo)
 
-# Estructura después (con análisis completo habilitado)
+# Estructura después
 output/
 ├── entrevista_transcripcion.txt               # Transcripción limpia
 ├── entrevista_transcripcion_detallada.txt     # Con timestamps
-├── entrevista_transcripcion_formateada.txt    # Formateado con LLM
+├── entrevista_transcripcion_formateado.txt    # Formateado con LLM
 ├── entrevista_resumen.txt                     # Resumen ejecutivo
 ├── entrevista_puntos_clave.txt                # Puntos importantes
 ├── entrevista_temas.txt                       # Temas principales
 ├── conferencia_transcripcion.txt
 ├── conferencia_transcripcion_detallada.txt
-├── conferencia_transcripcion_formateada.txt
-├── conferencia_resumen.txt                    # Resumen ejecutivo
-├── conferencia_puntos_clave.txt               # Puntos importantes
-└── conferencia_temas.txt                      # Temas principales
+├── conferencia_transcripcion_formateado.txt
+├── conferencia_resumen.txt
+├── conferencia_puntos_clave.txt
+└── conferencia_temas.txt
 ```
 
 ### Archivos Generados por Audio
@@ -156,6 +213,9 @@ WHISPER_MODEL=medium  # tiny, base, small, medium, large
 
 # Idioma del audio
 AUDIO_LANGUAGE=es     # es, en, fr, etc.
+
+# Variante regional (español chileno optimizado)
+AUDIO_DIALECT=cl      # cl (Chile), mx (México), ar (Argentina), es (España)
 
 # Motor de formateo
 FORMATTER=ollama      # ollama (local) o gemini (API)
@@ -189,6 +249,36 @@ ENABLE_SUMMARY=true
 ENABLE_KEY_POINTS=false
 ENABLE_TOPICS=false
 ```
+
+### 🇨🇱 Optimización para Español Chileno
+
+El sistema incluye **optimización especial para español chileno** con reconocimiento de más de 50 modismos locales:
+
+**Modismos detectados automáticamente:**
+- Palabras comunes: `po`, `cachai`, `weón/huevón`, `fome`, `bacán`, `cuático`, `brígido`
+- Expresiones: `al tiro`, `estar piola`, `cahuín`, `hueá`, `choro`, `raja`
+- Vocabulario único: `taco` (atasco), `guagua` (bebé), `completo`, `once`, `copete`
+- Jerga urbana: `yuta/paco` (policía), `flaite`, `cuico`, `mino/mina`
+- Y muchos más...
+
+**Configuración:**
+
+```env
+# Para español chileno (recomendado para audios de Chile)
+AUDIO_LANGUAGE=es
+AUDIO_DIALECT=cl
+
+# Otras opciones disponibles
+AUDIO_DIALECT=mx  # Español mexicano
+AUDIO_DIALECT=ar  # Español argentino
+AUDIO_DIALECT=es  # Español estándar
+```
+
+**Parámetros optimizados:**
+- Prompt contextual con modismos chilenos
+- Temperature 0.0 para máxima precisión
+- Beam search optimizado (5 candidatos)
+- Contexto preservado entre segmentos
 
 **Tiempo adicional:** Cada análisis toma ~2-5 minutos extra por audio (dependiendo de duración).
 

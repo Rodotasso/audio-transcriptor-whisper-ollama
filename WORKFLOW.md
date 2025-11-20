@@ -5,10 +5,12 @@
 ```
 ┌─────────────────────────────────────────────────────────────────┐
 │                    USUARIO                                       │
-│  Coloca archivos de audio en la carpeta input/                  │
+│  1. Coloca archivos de audio en la carpeta input/               │
+│  2. Ejecuta: .\run.ps1                                           │
+│  3. Selecciona opción del menú interactivo                       │
 └───────────────────────────┬─────────────────────────────────────┘
                             │
-                            │ Ejecuta: .\run.ps1
+                            │ Menú Interactivo
                             ↓
 ┌─────────────────────────────────────────────────────────────────┐
 │                  CONTENEDOR DOCKER                               │
@@ -50,13 +52,14 @@
 │                      │                                           │
 │                      ↓                                           │
 │  ┌───────────────────────────────────────────────────────────┐  │
-│  │  4. FORMATEO (Si GOOGLE_API_KEY está configurada)        │  │
+│  │  4. FORMATEO CON OLLAMA (100% Local)                     │  │
 │  │     ┌─────────────────────────────────────────┐           │  │
 │  │     │ a) Lee transcripción cruda              │           │  │
 │  │     └──────────────┬──────────────────────────┘           │  │
 │  │                    ↓                                       │  │
 │  │     ┌─────────────────────────────────────────┐           │  │
-│  │     │ b) Envía a API de Google Gemini         │           │  │
+│  │     │ b) Envía a Ollama (llama3.2:3b)         │           │  │
+│  │     │    - Servicio local en puerto 11434     │           │  │
 │  │     └──────────────┬──────────────────────────┘           │  │
 │  │                    ↓                                       │  │
 │  │     ┌─────────────────────────────────────────┐           │  │
@@ -73,6 +76,23 @@
 │                      │                                           │
 │                      ↓                                           │
 │  ┌───────────────────────────────────────────────────────────┐  │
+│  │  5. ANÁLISIS AVANZADO CON OLLAMA                          │  │
+│  │     ┌─────────────────────────────────────────┐           │  │
+│  │     │ a) Genera resumen ejecutivo             │           │  │
+│  │     │    - nombre_resumen.txt                 │           │  │
+│  │     └──────────────────────────────────────────┘           │  │
+│  │     ┌─────────────────────────────────────────┐           │  │
+│  │     │ b) Extrae puntos clave                  │           │  │
+│  │     │    - nombre_puntos_clave.txt            │           │  │
+│  │     └──────────────────────────────────────────┘           │  │
+│  │     ┌─────────────────────────────────────────┐           │  │
+│  │     │ c) Identifica temas principales         │           │  │
+│  │     │    - nombre_temas.txt                   │           │  │
+│  │     └──────────────────────────────────────────┘           │  │
+│  └───────────────────┬───────────────────────────────────────┘  │
+│                      │                                           │
+│                      ↓                                           │
+│  ┌───────────────────────────────────────────────────────────┐  │
 │  │  5. LOGS Y FINALIZACIÓN                                   │  │
 │  │     - Guarda logs en logs/                                │  │
 │  │     - Reporta estadísticas                                │  │
@@ -82,9 +102,13 @@
                             ↓
 ┌─────────────────────────────────────────────────────────────────┐
 │                    RESULTADOS EN output/                         │
-│  - archivo_transcripcion.txt                                     │
-│  - archivo_transcripcion_detallada.txt                           │
-│  - archivo_transcripcion_formateado.txt (si hay API key)         │
+│  Por cada audio se generan hasta 6 archivos:                    │
+│  - archivo_transcripcion.txt (Whisper básico)                    │
+│  - archivo_transcripcion_detallada.txt (con timestamps)          │
+│  - archivo_transcripcion_formateado.txt (Ollama)                 │
+│  - archivo_resumen.txt (Ollama análisis)                         │
+│  - archivo_puntos_clave.txt (Ollama análisis)                    │
+│  - archivo_temas.txt (Ollama análisis)                           │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
@@ -142,8 +166,12 @@ HOST (tu PC)                    CONTENEDOR DOCKER
 │ MODE                │ full / transcribe-only / format-only     │
 │ WHISPER_MODEL       │ tiny / base / small / medium / large     │
 │ AUDIO_LANGUAGE      │ es / en / fr / ... (código ISO)          │
-│ GOOGLE_API_KEY      │ Tu clave de API de Gemini (opcional)     │
-│ GEMINI_MODEL        │ gemini-1.5-flash / gemini-1.5-pro        │
+│ AUDIO_DIALECT       │ cl / mx / ar / es (variante regional)    │
+│ FORMATTER           │ ollama / gemini (motor de formateo)      │
+│ OLLAMA_MODEL        │ llama3.2:3b (modelo local por defecto)   │
+│ ENABLE_SUMMARY      │ true / false (generar resumen)           │
+│ ENABLE_KEY_POINTS   │ true / false (puntos clave)              │
+│ ENABLE_TOPICS       │ true / false (temas principales)         │
 └─────────────────────┴──────────────────────────────────────────┘
 ```
 
@@ -155,18 +183,28 @@ HOST (tu PC)                    CONTENEDOR DOCKER
 │              (Orquestador Principal)                    │
 │  - Coordina transcripción y formateo                    │
 │  - Maneja configuración y logs                          │
+│  - Integración con dialectos regionales                 │
 └────────────┬────────────────────────────┬───────────────┘
              │                            │
              ↓                            ↓
 ┌────────────────────────┐    ┌──────────────────────────┐
-│   transcribe.py        │    │      format.py           │
-│   (Motor Whisper)      │    │   (Motor Gemini)         │
+│   transcribe.py        │    │   format_ollama.py       │
+│   (Motor Whisper)      │    │   (Motor Ollama Local)   │
 │                        │    │                          │
-│ - AudioTranscriber     │    │ - TranscriptionFormatter │
-│ - load_model()         │    │ - configure_api()        │
-│ - transcribe_file()    │    │ - format_text()          │
-│ - process_directory()  │    │ - format_file()          │
-└────────────────────────┘    └──────────────────────────┘
+│ - AudioTranscriber     │    │ - OllamaFormatter        │
+│ - load_model()         │    │ - format_text()          │
+│ - transcribe_file()    │    │ - generate_summary()     │
+│ - DIALECT_PROMPTS      │    │ - extract_key_points()   │
+│ - Optimización chilena │    │ - identify_topics()      │
+└────────────────────────┘    └──────────┬───────────────┘
+                                         │
+                                         ↓
+                              ┌──────────────────────┐
+                              │  Servicio Ollama     │
+                              │  (Puerto 11434)      │
+                              │  llama3.2:3b (2GB)   │
+                              │  100% Local          │
+                              └──────────────────────┘
 ```
 
 ## 🚦 Estados del Sistema
@@ -227,29 +265,41 @@ Modelo      CPU (4 cores)    GPU (NVIDIA)    Calidad
 ─────────────────────────────────────────────────────
 tiny        ~5 minutos       ~2 minutos      ★★☆☆☆
 base        ~7 minutos       ~3 minutos      ★★★☆☆
-small       ~10 minutos      ~4 minutos      ★★★★☆
+small       ~10 minutos      ~4 minutos      ★★★★☆ (Recomendado)
 medium      ~20 minutos      ~7 minutos      ★★★★★
 large       ~40 minutos      ~12 minutos     ★★★★★
 ```
 
-Formateo con Gemini: **~1-2 minutos adicionales**
+**Formateo con Ollama (llama3.2:3b):**
+- Formateo básico: ~30-60 segundos
+- Análisis completo (resumen + puntos + temas): ~2-3 minutos
+- **100% local, sin límites de API**
 
-## 🔐 Flujo de Seguridad
+## 🔐 Flujo de Seguridad y Privacidad
 
 ```
-API Key de Gemini
+🇨🇱 Audios en español chileno
        ↓
-  Almacenada en .env (local, no en Git)
+  Procesados con Whisper + dialectos locales
        ↓
-  Leída por Docker al iniciar
+  Formateo 100% LOCAL con Ollama (llama3.2:3b)
        ↓
-  Usada solo dentro del contenedor
+  Todo dentro de contenedores Docker (aislado)
        ↓
-  Enviada a Google Gemini por HTTPS
+  Sin envío de datos a internet (PRIVACIDAD TOTAL)
        ↓
-  No se registra en logs (oculta)
+  Archivos permanecen en tu PC (./output/)
+       ↓
+  Logs locales, sin tracking externo
 ```
+
+**Ventajas:**
+- ✅ Sin API keys necesarias
+- ✅ Sin límites de uso
+- ✅ Sin costos por procesamiento
+- ✅ Datos nunca salen de tu computador
+- ✅ Funciona offline una vez descargados los modelos
 
 ---
 
-**Este flujo garantiza procesamiento eficiente y seguro de tus archivos de audio** 🎉
+**Este flujo garantiza procesamiento eficiente, seguro y 100% privado de tus archivos de audio** 🎉

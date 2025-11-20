@@ -37,6 +37,8 @@ services:
       - WHISPER_MODEL=${WHISPER_MODEL:-medium}
       # Idioma del audio (código ISO)
       - AUDIO_LANGUAGE=${AUDIO_LANGUAGE:-es}
+      # Variante regional (cl=Chile, mx=México, ar=Argentina, es=España)
+      - AUDIO_DIALECT=${AUDIO_DIALECT:-es}
       # Modelo de Ollama (para formateo local)
       - OLLAMA_MODEL=${OLLAMA_MODEL:-llama3.2:3b}
       - OLLAMA_HOST=http://ollama:11434

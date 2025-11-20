@@ -38,37 +38,34 @@ Hacer que el sistema sea **100% reproducible** en cualquier computador sin neces
 
 ---
 
-### Método 2: Imagen Docker Pre-construida (Recomendado)
+### Método 2: Instalación Desde GitHub (Recomendado)
 
-**Tamaño:** ~6-8 GB  
-**Ventajas:** Incluye modelos Whisper, sin descargas adicionales  
-**Desventajas:** Archivo grande, solo descarga modelo Ollama en primera ejecución
+**Tamaño:** ~50 MB (código) + ~6 GB (descarga automática)  
+**Ventajas:** Siempre actualizado, menú interactivo guía instalación  
+**Desventajas:** Requiere internet en primera ejecución
 
 #### Pasos:
 
-1. **Construir y empaquetar:**
+1. **Clonar repositorio:**
    ```powershell
-   .\build-package.ps1 -ExportImages
+   git clone https://github.com/Rodotasso/audio-transcriptor-whisper-ollama.git
+   cd audio-transcriptor-whisper-ollama
    ```
 
-2. **Comprimir:**
+2. **Ejecutar menú interactivo:**
    ```powershell
-   Compress-Archive -Path ".\package\*" -DestinationPath "transcriptor-full.zip"
+   .\run.ps1
    ```
 
-3. **Instalar en nuevo computador:**
-   ```powershell
-   Expand-Archive transcriptor-full.zip
-   cd transcriptor-full
-   
-   # Cargar imágenes Docker
-   docker load -i audio-transcriber.tar
-   docker load -i ollama.tar
-   
-   # Configurar y ejecutar
-   Copy-Item .env.example .env
-   .\run.ps1  # Solo descarga modelo Ollama (~2GB)
-   ```
+3. **Seleccionar opción 4 (Configuración) → Opción 1 (Primera instalación)**
+   - El menú construye imagen Docker automáticamente (~4GB Whisper)
+   - Descarga modelo Ollama (~2GB) en primer uso
+   - Configura directorios y variables
+
+4. **Listo para usar:**
+   - Colocar audios en `input/`
+   - Ejecutar `.\run.ps1` → Opción 1 (Proceso completo)
+   - Resultados en `output/`
 
 ---
 

@@ -22,20 +22,65 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 class AudioTranscriber:
-    def __init__(self, model_name="medium", language="es"):
+    # Diccionario de modismos por variante regional
+    DIALECT_PROMPTS = {
+        'cl': (
+            "Este es español chileno. Modismos muy comunes: "
+            "po (énfasis, ej: 'sí po'), cachai (¿entiendes?), weón/huevón (tipo/amigo), "
+            "fome (aburrido), bacán (genial), cuático (increíble/extraño), brígido (intenso), "
+            "al tiro (inmediatamente), pololo/polola (novio/novia), pololear (estar de novios), "
+            "carrete (fiesta), cahuín (chisme/problema), hueá/huevada (cosa), "
+            "choro (difícil/genial), raja (difícil), terrible de (muy), piola (tranquilo/discreto), "
+            "tincada (intuición), leseo (burla), pasarlo chancho (pasarlo bien), "
+            "echar la foca (dormir siesta), pegar el show (montar escándalo), "
+            "taco (atasco/embotellamiento), guagua (bebé), completo (hot dog completo), "
+            "once (té/merienda tardía), copete (bebida alcohólica), mechero (ladrón), "
+            "yuta (policía), paco (policía), flaite (ordinario), cuico (persona adinerada), "
+            "tata (padre/abuelo), viejo/vieja (padre/madre), mino/mina (hombre/mujer atractivo), "
+            "pelar (criticar a alguien), tirar mala onda (ser antipático), mandar cagando (despedir mal), "
+            "estar cagado de la risa (reír mucho), cachar (entender), sapear (delatar), "
+            "poner weno (poner atención), ir al chancho (ir a lo seguro), "
+            "hacer la cimarra (faltar a clases), quedó la cagá (quedó el desastre), "
+            "andar pato (sin dinero), estar raja (estar muy bueno/difícil), "
+            "estar chocho (estar feliz), meter la pata (equivocarse), "
+            "ser un tela (ser cobarde), ser pulento (ser muy bueno)."
+        ),
+        'mx': (
+            "Este es español mexicano. Modismos comunes: "
+            "qué onda, güey/wey, chido, padre, órale, ándale, no manches."
+        ),
+        'ar': (
+            "Este es español argentino. Modismos comunes: "
+            "che, boludo, copado, piola, quilombo, laburo, morfar."
+        ),
+        'es': (
+            "Este es español estándar."
+        )
+    }
+    
+    def __init__(self, model_name="medium", language="es", dialect="es"):
         """
         Inicializa el transcriptor de audio.
         
         Args:
             model_name: Modelo de Whisper a usar (tiny, base, small, medium, large)
             language: Idioma del audio (código ISO, ej: 'es' para español)
+            dialect: Variante regional (cl, mx, ar, es)
         """
         self.model_name = model_name
         self.language = language
+        self.dialect = dialect
         self.model = None
         self.device = self._setup_device()
         
+        # Seleccionar prompt según variante
+        self.initial_prompt = self.DIALECT_PROMPTS.get(dialect, self.DIALECT_PROMPTS['es'])
+        
         logger.info(f"Dispositivo seleccionado: {self.device}")
+        if dialect == 'cl':
+            logger.info(f"🇨🇱 Optimizado para español chileno con modismos locales")
+        else:
+            logger.info(f"Variante de idioma: {dialect}")
     
     def _setup_device(self):
         """
@@ -133,13 +178,21 @@ class AudioTranscriber:
         logger.info(f"Tamaño del archivo: {audio_path.stat().st_size / (1024*1024):.2f} MB")
         
         try:
-            # Transcribir el archivo
+            # Transcribir el archivo con parámetros optimizados para español chileno
             # fp16=False para compatibilidad con CPUs
             result = self.model.transcribe(
                 str(audio_path),
                 language=self.language,
                 fp16=False,
-                verbose=True
+                verbose=True,
+                initial_prompt=self.initial_prompt,  # Contexto chileno
+                temperature=0.0,  # Más determinístico para mayor precisión
+                beam_size=5,  # Búsqueda más exhaustiva
+                best_of=5,  # Mejores candidatos
+                condition_on_previous_text=True,  # Mantener contexto entre segmentos
+                compression_ratio_threshold=2.4,  # Detectar repeticiones
+                logprob_threshold=-1.0,  # Umbral de confianza
+                no_speech_threshold=0.6  # Detectar silencio
             )
             
             transcription_text = result["text"]
@@ -241,6 +294,7 @@ def main():
     # Configuración desde variables de entorno
     model_name = os.environ.get('WHISPER_MODEL', 'medium')
     language = os.environ.get('AUDIO_LANGUAGE', 'es')
+    dialect = os.environ.get('AUDIO_DIALECT', 'es')
     input_dir = Path(os.environ.get('INPUT_DIR', '/app/input'))
     output_dir = Path(os.environ.get('OUTPUT_DIR', '/app/output'))
     
@@ -249,12 +303,13 @@ def main():
     logger.info("="*80)
     logger.info(f"Modelo: {model_name}")
     logger.info(f"Idioma: {language}")
+    logger.info(f"Variante: {dialect}")
     logger.info(f"Directorio de entrada: {input_dir}")
     logger.info(f"Directorio de salida: {output_dir}")
     logger.info("="*80 + "\n")
     
-    # Crear transcriptor
-    transcriber = AudioTranscriber(model_name=model_name, language=language)
+    # Crear transcriptor con variante regional
+    transcriber = AudioTranscriber(model_name=model_name, language=language, dialect=dialect)
     
     # Cargar modelo
     if not transcriber.load_model():

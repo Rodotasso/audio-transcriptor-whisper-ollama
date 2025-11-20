@@ -76,17 +76,16 @@ Docker es un programa que permite ejecutar aplicaciones en "contenedores" aislad
 
 ---
 
-## Paso 2: Configurar (1 minuto)
+## Paso 2: Abrir PowerShell en la carpeta del proyecto
 
-En la ventana de PowerShell que abriste, ejecuta:
+1. **Abrir PowerShell:**
+   - Abre la carpeta del proyecto
+   - Mantén `Shift` y haz clic derecho en espacio vacío
+   - Selecciona "Abrir ventana de PowerShell aquí"
 
-```powershell
-Copy-Item .env.example .env
-```
+**¡Listo!** No necesitas configurar nada manualmente. El menú interactivo se encargará de todo.
 
-**Eso es todo.** El sistema ya está configurado con valores por defecto que funcionan.
-
-> **Opcional:** Si quieres cambiar la configuración, edita el archivo `.env` con Bloc de notas
+> **Nota:** El archivo `.env` se creará automáticamente la primera vez que ejecutes `.\run.ps1`
 
 ---
 
@@ -105,7 +104,7 @@ Copy-Item "D:\Mis Audios\entrevista.mp3" .\input\
 
 ---
 
-## Paso 4: Ejecutar la Transcripción
+## Paso 4: Ejecutar el Menú Interactivo
 
 En PowerShell (en la carpeta del proyecto), escribe:
 
@@ -113,21 +112,40 @@ En PowerShell (en la carpeta del proyecto), escribe:
 .\run.ps1
 ```
 
-**¿Qué pasará?**
-1. Se abrirá un menú interactivo
-2. Selecciona la opción `2` (Ejecutar transcripción) o `1` (primera vez)
-3. **Primera vez:** El script automáticamente:
-   - Iniciará el servicio Ollama
-   - Verificará si el modelo llama3.2:3b está descargado
-   - Si NO está descargado, lo descargará automáticamente (~2GB, 5-10 min)
-   - Descargará modelos de Whisper (~3-5 GB, 10-20 min)
-   - **Total: ~5-7 GB | 15-30 minutos**
-4. Transcribirá tus archivos automáticamente
-5. Verás el progreso en pantalla
+**Verás el menú interactivo:**
+
+```
+========================================
+  🎙️  TRANSCRIPTOR DE AUDIO
+  Whisper + Ollama (100% Local)
+========================================
+
+MENÚ PRINCIPAL
+
+1. 🚀 Transcribir y Formatear (Proceso Completo)
+2. 🎤 Solo Transcribir (Whisper)
+3. ✨ Solo Formatear (Ollama)
+4. 🔧 Configuración y Mantenimiento
+5. 📊 Ver Estado del Sistema
+6. 🗑️  Limpiar Archivos de Salida
+7. ❌ Salir
+```
+
+**Primera vez: Selecciona opción 4 → opción 1 (Primera Instalación)**
+- Construirá la imagen Docker (~10-15 min)
+- Descargará modelos de Whisper (~3-5 GB)
+- Descargará modelo Ollama (~2GB)
+- **Total: ~5-7 GB | 15-30 minutos**
+
+**Usos posteriores: Selecciona opción 1 (Proceso Completo)**
+- Transcribe tus archivos automáticamente
+- Formatea el texto con LLM
+- Genera análisis completo
+- Verás el progreso en pantalla
 
 > **Importante:** La primera ejecución es lenta porque descarga modelos. Las siguientes serán rápidas.
 > 
-> **Modelo Ollama:** El script `run.ps1` se encarga de verificar y descargar automáticamente el modelo si no existe. No necesitas ejecutar ningún comando manual.
+> **Todo es automático:** El menú te guiará paso a paso. No necesitas comandos manuales.
 
 ---
 
@@ -157,27 +175,41 @@ En PowerShell (en la carpeta del proyecto), escribe:
 
 ## Cambiar Configuración
 
-Edita `.env`:
-```env
-# Solo transcribir (sin formateo)
-MODE=transcribe-only
+**Opción 1: Desde el menú** (Recomendado)
+- Ejecuta `.\run.ps1`
+- Selecciona opción **4** (Configuración)
+- Selecciona opción **3** (Editar archivo .env)
 
-# Cambiar modelo
-WHISPER_MODEL=small
+**Opción 2: Manual**
+
+Edita `.env` con Bloc de notas:
+
+```env
+# Cambiar modelo de Whisper
+WHISPER_MODEL=small  # tiny, base, small, medium, large
 
 # Cambiar idioma
-AUDIO_LANGUAGE=en
+AUDIO_LANGUAGE=es  # es, en, fr, pt, etc.
 
-# Desactivar análisis avanzado
+# Español chileno optimizado (detecta modismos)
+AUDIO_DIALECT=cl  # cl, mx, ar, es
+
+# Desactivar análisis avanzado (más rápido)
 ENABLE_SUMMARY=false
 ENABLE_KEY_POINTS=false
 ENABLE_TOPICS=false
 ```
 
-## Limpiar todo
+## Limpiar Archivos de Salida
+
+**Opción 1: Desde el menú** (Recomendado)
+- Ejecuta `.\run.ps1`
+- Selecciona opción **6** (Limpiar Archivos de Salida)
+
+**Opción 2: Manual**
 
 ```powershell
-.\clean.ps1
+Remove-Item .\output\* -Force
 ```
 
 ## Problemas Comunes

@@ -107,7 +107,7 @@ def main():
                             )
                             
                             # Buscar todas las transcripciones formateadas
-                            formatted_files = list(output_dir.glob("*_transcripcion_formateada.txt"))
+                            formatted_files = list(output_dir.glob("*_transcripcion_formateado.txt"))
                             
                             if not formatted_files:
                                 logger.warning("No se encontraron transcripciones formateadas para analizar.")
@@ -122,7 +122,7 @@ def main():
                                         with open(formatted_file, 'r', encoding='utf-8') as f:
                                             transcription = f.read()
                                         
-                                        base_name = formatted_file.stem.replace('_transcripcion_formateada', '')
+                                        base_name = formatted_file.stem.replace('_transcripcion_formateado', '')
                                         
                                         # Generar resumen si está habilitado
                                         if enable_summary:

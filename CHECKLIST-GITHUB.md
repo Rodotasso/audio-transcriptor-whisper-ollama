@@ -10,12 +10,10 @@ Fecha: 19 de noviembre de 2025
 - [x] `.env.example` - Configuración por defecto con GPU
 - [x] `.gitignore` - Excluye archivos grandes y sensibles
 - [x] `README.md` - Documentación completa para GitHub
-- [x] `src/transcribe.py` - Con soporte GPU funcional
-- [x] `src/format_ollama.py` - Formatter local
+- [x] `src/transcribe.py` - Con soporte GPU y dialectos (cl, mx, ar, es)
+- [x] `src/format_ollama.py` - Formatter local (sin límite de 15k chars)
 - [x] `src/main.py` - Orquestador principal
-- [x] `run.ps1` - Script de ejecución
-- [x] `verify.ps1` - Verificador de sistema
-- [x] `clean.ps1` - Limpieza
+- [x] `run.ps1` - Menú interactivo (600+ líneas)
 
 ## 🔒 Archivos Excluidos (.gitignore)
 
@@ -33,16 +31,19 @@ Fecha: 19 de noviembre de 2025
 - [x] `.env.example` tiene valores seguros por defecto
 - [x] `USE_GPU=auto` - Detección automática
 - [x] `GPU_MEMORY_LIMIT=2048` - Límite de 2GB
-- [x] `FORMATTER=ollama` - Formato local por defecto
-- [x] `WHISPER_MODEL=medium` - Modelo recomendado
+- [x] `FORMATTER=ollama` - Formato local por defecto (100% gratis)
+- [x] `AUDIO_DIALECT=cl` - Español chileno por defecto
+- [x] `WHISPER_MODEL=small` - Modelo recomendado para balance
 - [x] Sin claves API hardcodeadas
+- [x] `ENABLE_SUMMARY=true` - Análisis avanzado activo
 
 ## 🐛 Bugs Corregidos
 
 - [x] Bug f-string en transcribe.py línea 58
 - [x] Eliminado `version: '3.8'` obsoleto en docker-compose.yml
-- [x] volume-manager.ps1 ahora detecta nombre automáticamente
+- [x] Límite de 15,000 caracteres en format_ollama.py (líneas 109-111 eliminadas)
 - [x] .gitignore excluye todos los archivos temporales
+- [x] Transcripciones largas ya no se truncan
 
 ## 🎮 Soporte GPU
 
@@ -54,19 +55,24 @@ Fecha: 19 de noviembre de 2025
 
 ## 📚 Documentación
 
-- [x] `README.md` - Guía principal para GitHub
-- [x] `QUICKSTART.md` - Inicio rápido
-- [x] `PROYECTO.md` - Arquitectura detallada
-- [x] `WORKFLOW.md` - Flujo interno
-- [x] `DISTRIBUCION.md` - Opciones de empaquetado
-- [x] `GITHUB.md` - Guía de publicación
+- [x] `README.md` - Guía principal (incluye menú y español chileno)
+- [x] `QUICKSTART.md` - Inicio rápido (menú interactivo)
+- [x] `PROYECTO.md` - Arquitectura detallada (sin scripts obsoletos)
+- [x] `WORKFLOW.md` - Flujo interno (Ollama 100% local)
+- [x] `DISTRIBUCION.md` - Opciones de distribución
+- [x] `GITHUB.md` - Guía de publicación (actualizada)
 - [x] `GPU.md` - Configuración GPU
+- [x] Todas las referencias a Gemini API reemplazadas por Ollama
+- [x] Documentación menciona feature único: Español Chileno
 
 ## 🧪 Tests Pendientes
 
 - [ ] Build desde cero: `docker-compose build --no-cache`
 - [ ] Test en directorio limpio simulando clone
 - [ ] Ejecución completa descargando modelos
+- [ ] Test del menú interactivo: todas las 7 opciones
+- [ ] Test de detección de dialectos chilenos con audio de muestra
+- [ ] Verificar que análisis avanzado genera 6 archivos por audio
 
 ## 🚀 Listo para Publicar
 

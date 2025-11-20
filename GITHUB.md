@@ -41,11 +41,8 @@ Move-Item README-GITHUB.md README.md
 ├── PROYECTO.md             ✅ Arquitectura
 ├── WORKFLOW.md             ✅ Flujo interno
 ├── DISTRIBUCION.md         ✅ Cómo compartir
-├── run.ps1                 ✅ Script principal
-├── verify.ps1              ✅ Verificador
-├── clean.ps1               ✅ Limpieza
-├── build-package.ps1       ✅ Empaquetador
-├── volume-manager.ps1      ✅ Gestor de volúmenes
+├── GPU.md                  ✅ Optimización GPU
+├── run.ps1                 ✅ Menú interactivo principal
 └── src/                    ✅ Código Python
     ├── main.py
     ├── transcribe.py

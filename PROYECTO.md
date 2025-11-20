@@ -38,9 +38,7 @@ d:\PRUEBA CREAR TRANSCRIPCION\
 ├── 📁 logs/                         # Logs de ejecución
 │   └── README.md
 │
-├── 📜 run.ps1                       # Script principal de ejecución
-├── 📜 clean.ps1                     # Script de limpieza
-├── 📜 verify.ps1                    # Script de verificación
+├── 📜 run.ps1                       # Menú interactivo principal
 │
 ├── 📖 README.md                     # Documentación completa
 ├── 📖 QUICKSTART.md                 # Guía de inicio rápido
@@ -89,38 +87,48 @@ d:\PRUEBA CREAR TRANSCRIPCION\
    docker-compose --version
    ```
 
-### 2. Configurar el Proyecto
+### 2. Agregar Archivos de Audio
 
 ```powershell
-# La configuración está lista para usar con valores óptimos
-
-# Opcional: Editar configuración avanzada
-notepad .env
-
-# NO necesitas API Keys - Todo es local con Ollama
-# El script run.ps1 descargará automáticamente el modelo llama3.2:3b (~2GB)
-```
-
-### 3. Agregar Archivos de Audio
-
-```powershell
-# Copiar tus archivos de audio a la carpeta input
+# Opción 1: Copiar manualmente
 Copy-Item "C:\ruta\a\tu\audio.mp3" input\
 
-# O múltiples archivos
-Copy-Item "C:\ruta\a\tus\audios\*.m4a" input\
+# Opción 2: Arrastra y suelta
+# Abre la carpeta "input" y arrastra tus archivos .mp3, .m4a, .wav, etc.
 ```
 
-### 4. Ejecutar
+### 3. Ejecutar el Menú Interactivo
 
 ```powershell
-# Opción 1: Usar el script automático (recomendado)
 .\run.ps1
-
-# Opción 2: Manualmente
-docker-compose build
-docker-compose up
 ```
+
+**El menú te guiará paso a paso:**
+
+```
+========================================
+  🎙️  TRANSCRIPTOR DE AUDIO
+  Whisper + Ollama (100% Local)
+========================================
+
+MENÚ PRINCIPAL
+
+1. 🚀 Transcribir y Formatear (Proceso Completo)
+2. 🎤 Solo Transcribir (Whisper)
+3. ✨ Solo Formatear (Ollama)
+4. 🔧 Configuración y Mantenimiento
+5. 📊 Ver Estado del Sistema
+6. 🗑️  Limpiar Archivos de Salida
+7. ❌ Salir
+```
+
+**Primera vez:**
+- Selecciona opción **4** → **1** (Primera Instalación)
+- El sistema descargará todo automáticamente (~15-30 min)
+
+**Usos posteriores:**
+- Selecciona opción **1** (Proceso Completo)
+- Todo funciona automáticamente
 
 ### 5. Ver Resultados
 
@@ -145,6 +153,7 @@ En el archivo `.env`:
 MODE=full                    # Transcribir + Formatear + Analizar
 FORMATTER=ollama             # Motor de formateo (100% local)
 AUDIO_LANGUAGE=es            # Idioma del audio
+AUDIO_DIALECT=cl             # Español chileno (detecta modismos)
 
 # Modelo Whisper según tu GPU
 WHISPER_MODEL=small          # Para GPUs 6GB (RTX 2060, 1060 6GB)

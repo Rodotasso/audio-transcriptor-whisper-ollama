@@ -90,7 +90,82 @@ class OllamaFormatter:
             logger.error(f"Error al preparar el modelo: {e}")
             return False
     
-    def format_text(self, raw_text, max_tokens=2000):
+    def _format_long_text(self, raw_text, max_tokens):
+        """
+        Formatea texto largo dividiéndolo en chunks.
+        
+        Args:
+            raw_text: Texto completo
+            max_tokens: Tokens máximos por chunk
+        
+        Returns:
+            str: Texto formateado completo
+        """
+        chunk_size = 25000  # Procesamos en chunks de 25k caracteres
+        chunks = []
+        
+        # Dividir en chunks
+        for i in range(0, len(raw_text), chunk_size):
+            chunks.append(raw_text[i:i + chunk_size])
+        
+        logger.info(f"  Dividido en {len(chunks)} chunks para procesar")
+        
+        # Formatear cada chunk
+        formatted_chunks = []
+        for idx, chunk in enumerate(chunks, 1):
+            logger.info(f"  Procesando chunk {idx}/{len(chunks)} ({len(chunk)} chars)...")
+            
+            prompt = f"""Por favor, formatea la siguiente parte de una transcripción de audio:
+
+REGLAS:
+1. Divide el texto en párrafos coherentes
+2. Añade puntuación correcta (puntos, comas, mayúsculas)
+3. Corrige errores gramaticales obvios
+4. NO resumas, mantén todo el contenido
+5. NO añadas información nueva
+6. Usa doble salto de línea entre párrafos
+
+TRANSCRIPCIÓN PARTE {idx}/{len(chunks)}:
+{chunk}
+
+TEXTO FORMATEADO:"""
+            
+            try:
+                payload = {
+                    "model": self.model_name,
+                    "prompt": prompt,
+                    "stream": False,
+                    "options": {
+                        "temperature": 0.1,
+                        "num_predict": max_tokens
+                    }
+                }
+                
+                response = requests.post(
+                    self.api_url,
+                    json=payload,
+                    timeout=300
+                )
+                
+                if response.status_code == 200:
+                    result = response.json()
+                    formatted_chunk = result.get('response', '').strip()
+                    formatted_chunks.append(formatted_chunk)
+                    logger.info(f"  ✓ Chunk {idx} formateado ({len(formatted_chunk)} chars)")
+                else:
+                    logger.warning(f"  Error en chunk {idx}, usando texto original")
+                    formatted_chunks.append(chunk)
+                    
+            except Exception as e:
+                logger.error(f"  Error al formatear chunk {idx}: {e}")
+                formatted_chunks.append(chunk)
+        
+        # Unir todos los chunks
+        final_text = "\n\n".join(formatted_chunks)
+        logger.info(f"✓ Texto largo formateado: {len(final_text)} caracteres totales")
+        return final_text
+    
+    def format_text(self, raw_text, max_tokens=4000):
         """
         Formatea un texto usando Ollama.
         
@@ -105,10 +180,10 @@ class OllamaFormatter:
             logger.warning("Texto vacío, saltando formateo")
             return raw_text
         
-        # Limitar el texto si es muy largo
-        if len(raw_text) > 15000:
-            logger.warning(f"Texto muy largo ({len(raw_text)} chars), procesando primeros 15000 caracteres")
-            raw_text = raw_text[:15000] + "..."
+        # Si el texto es muy largo (>30k chars), dividirlo en chunks
+        if len(raw_text) > 30000:
+            logger.info(f"Texto muy largo ({len(raw_text)} chars), procesando en chunks...")
+            return self._format_long_text(raw_text, max_tokens)
         
         prompt = f"""Por favor, formatea la siguiente transcripción de audio para mejorar su legibilidad:
 
