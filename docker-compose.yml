@@ -43,6 +43,10 @@ services:
       # Modelo de Gemini (solo si FORMATTER=gemini)
       - GEMINI_MODEL=${GEMINI_MODEL:-gemini-1.5-pro-latest}
       - GOOGLE_API_KEY=${GOOGLE_API_KEY}
+      # Análisis avanzado
+      - ENABLE_SUMMARY=${ENABLE_SUMMARY:-true}
+      - ENABLE_KEY_POINTS=${ENABLE_KEY_POINTS:-true}
+      - ENABLE_TOPICS=${ENABLE_TOPICS:-true}
       # Directorios internos
       - INPUT_DIR=/app/input
       - OUTPUT_DIR=/app/output
