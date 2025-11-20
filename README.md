@@ -51,11 +51,13 @@ Copy-Item .env.example .env
 
 **¡Listo!** El sistema descargará los modelos automáticamente en la primera ejecución.
 
-> **Primera ejecución:** Docker descargará automáticamente:
+> **Primera ejecución:** El script `run.ps1` descargará automáticamente:
 > - Modelos de Whisper (~1-5GB según configuración)
-> - Modelo Ollama (~2GB)
+> - Modelo Ollama llama3.2:3b (~2GB) - **se descarga automáticamente al ejecutar run.ps1**
 > - **Total: ~5-7GB | Tiempo: 15-30 minutos**
 > - Solo se descarga una vez, después es instantáneo
+
+> **IMPORTANTE:** El script `run.ps1` verificará si el modelo de Ollama está descargado y lo instalará automáticamente si no existe. **No necesitas hacer nada manualmente.**
 
 > **¿Primera vez con Docker?** Ve a la [Guía de Inicio Rápido](QUICKSTART.md) con explicaciones paso a paso.
 

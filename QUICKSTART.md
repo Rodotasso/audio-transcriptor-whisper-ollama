@@ -106,12 +106,19 @@ En PowerShell (en la carpeta del proyecto), escribe:
 
 **¿Qué pasará?**
 1. Se abrirá un menú interactivo
-2. Selecciona la opción `2` (Ejecutar transcripción)
-3. **Primera vez:** Descargará modelos (~5 GB) - Toma 15-30 minutos
+2. Selecciona la opción `2` (Ejecutar transcripción) o `1` (primera vez)
+3. **Primera vez:** El script automáticamente:
+   - Iniciará el servicio Ollama
+   - Verificará si el modelo llama3.2:3b está descargado
+   - Si NO está descargado, lo descargará automáticamente (~2GB, 5-10 min)
+   - Descargará modelos de Whisper (~3-5 GB, 10-20 min)
+   - **Total: ~5-7 GB | 15-30 minutos**
 4. Transcribirá tus archivos automáticamente
 5. Verás el progreso en pantalla
 
 > **Importante:** La primera ejecución es lenta porque descarga modelos. Las siguientes serán rápidas.
+> 
+> **Modelo Ollama:** El script `run.ps1` se encarga de verificar y descargar automáticamente el modelo si no existe. No necesitas ejecutar ningún comando manual.
 
 ---
 

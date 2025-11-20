@@ -101,7 +101,41 @@ switch ($option) {
     }
 }
 
-# Ejecutar el contenedor
+# Iniciar Ollama primero para descargar el modelo
+Write-Host ""
+Write-Host "========================================" -ForegroundColor Cyan
+Write-Host "Preparando Ollama..." -ForegroundColor Cyan
+Write-Host "========================================" -ForegroundColor Cyan
+Write-Host ""
+
+# Iniciar solo el servicio Ollama
+Write-Host "Iniciando servicio Ollama..." -ForegroundColor Cyan
+docker-compose up -d ollama
+Start-Sleep -Seconds 10
+
+# Verificar si el modelo está instalado
+Write-Host ""
+Write-Host "Verificando modelo llama3.2:3b..." -ForegroundColor Cyan
+$modelCheck = docker exec ollama ollama list 2>&1 | Select-String "llama3.2:3b"
+if (-not $modelCheck) {
+    Write-Host "⚠ Modelo llama3.2:3b no encontrado" -ForegroundColor Yellow
+    Write-Host "Descargando modelo (~2GB, puede tardar varios minutos)..." -ForegroundColor Yellow
+    Write-Host ""
+    docker exec ollama ollama pull llama3.2:3b
+    if ($LASTEXITCODE -eq 0) {
+        Write-Host ""
+        Write-Host "✓ Modelo descargado exitosamente" -ForegroundColor Green
+    } else {
+        Write-Host ""
+        Write-Host "✗ Error al descargar el modelo" -ForegroundColor Red
+        docker-compose down
+        exit 1
+    }
+} else {
+    Write-Host "✓ Modelo llama3.2:3b ya está instalado" -ForegroundColor Green
+}
+
+# Ahora ejecutar el servicio completo
 Write-Host ""
 Write-Host "========================================" -ForegroundColor Cyan
 Write-Host "Iniciando transcripción..." -ForegroundColor Cyan
