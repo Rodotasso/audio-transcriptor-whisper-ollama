@@ -62,6 +62,16 @@ d:\PRUEBA CREAR TRANSCRIPCION\
 
 ## 🚀 Pasos para Empezar
 
+> **¿Necesito una GPU o tarjeta gráfica potente?**
+> 
+> **NO.** El sistema funciona en cualquier PC moderna:
+> - ✅ **Con GPU NVIDIA:** Transcripción más rápida (~15 min/hora)
+> - ✅ **Sin GPU:** Usa tu procesador normal (~30 min/hora)
+> - ✅ **No sabes qué tienes:** Funciona igual, detección automática
+> - ✅ **Calidad idéntica:** Con o sin GPU, los resultados son los mismos
+> 
+> El sistema detecta tu hardware automáticamente y se adapta.
+
 ### 1. Instalar Docker (solo primera vez)
 
 **Docker no está instalado en tu sistema.** Descárgalo aquí:

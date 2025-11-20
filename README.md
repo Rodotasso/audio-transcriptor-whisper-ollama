@@ -35,6 +35,18 @@ Sistema completo basado en Docker para **transcribir y formatear archivos de aud
 - **8GB RAM** mínimo (16GB recomendado)
 - **10GB espacio** en disco libre (para modelos)
 
+> **¿Y si no tengo GPU o no sé si tengo una?**
+> 
+> **¡No te preocupes! El sistema funciona perfectamente sin GPU.**
+> 
+> - ✅ **Detección automática:** El sistema detecta automáticamente si tienes GPU NVIDIA
+> - ✅ **Funciona sin GPU:** Usa tu CPU (procesador normal) si no hay GPU
+> - ✅ **Mismo resultado:** La calidad de transcripción es idéntica, solo tarda un poco más
+> - ⏱️ **Diferencia de tiempo:** Con GPU: ~15 min por hora de audio | Sin GPU: ~30-40 min
+> - 🔧 **Configuración automática:** No necesitas tocar nada, funciona al ejecutar `.\run.ps1`
+> 
+> **En resumen:** Funciona en cualquier PC moderna. Si tienes GPU se usará automáticamente (más rápido), si no, usará CPU (un poco más lento pero igual de confiable).
+
 ### Instalación en 3 Pasos
 
 ```powershell
@@ -180,33 +192,49 @@ ENABLE_TOPICS=false
 
 **Tiempo adicional:** Cada análisis toma ~2-5 minutos extra por audio (dependiendo de duración).
 
-### Tiempos de Procesamiento (Audio de 1 hora)
+### ⏱️ Tiempos de Procesamiento (Audio de 1 hora)
 
-| Modelo Whisper | Con GPU | Sin GPU | Precisión | Uso Recomendado |
-|----------------|---------|---------|-----------|-----------------|
+> **¿No sabes si tienes GPU?** No importa, el sistema funciona igual. Con GPU será más rápido, sin GPU tardará un poco más.
+
+#### Transcripción con Whisper
+
+| Modelo Whisper | Con GPU NVIDIA | Sin GPU (CPU) | Precisión | Uso Recomendado |
+|----------------|----------------|---------------|-----------|-----------------|
 | tiny | 2-3 min | 5-8 min | Básica | Pruebas rápidas |
 | base | 3-5 min | 8-12 min | Buena | Audio claro |
-| small | 5-10 min | 15-25 min | Muy buena | **Balance velocidad/calidad** |
-| **medium** | **10-20 min** | **30-50 min** | **Excelente** | **Recomendado** |
+| **small** | **5-10 min** | **15-25 min** | **Muy buena** | **Recomendado sin GPU** ✅ |
+| **medium** | **10-20 min** | **30-50 min** | **Excelente** | **Recomendado con GPU** ✅ |
 | large | 20-40 min | 60-120 min | Máxima | Producción profesional |
 
-**Análisis Ollama (adicional):**
-- Formateo: ~2-3 min
-- Resumen: ~3-5 min
-- Puntos clave: ~2-4 min
-- Temas: ~1-2 min
+#### Análisis con Ollama (adicional, igual con/sin GPU)
 
-**Tiempo total (medium + análisis completo):** 18-34 min con GPU | 38-64 min sin GPU
+- Formateo: ~2-3 min por audio
+- Resumen: ~3-5 min por audio
+- Puntos clave: ~2-4 min por audio
+- Temas: ~1-2 min por audio
 
-### Comparación de Modelos Whisper
+**Tiempo total estimado (medium + análisis completo):**
+- 🚀 **Con GPU NVIDIA:** 18-34 minutos
+- 💻 **Sin GPU (CPU):** 38-64 minutos
 
-| Modelo | RAM | Velocidad | Precisión |
-|--------|-----|-----------|-----------|
-| tiny | ~1GB | Muy rápida | Básica |
-| base | ~1GB | Rápida | Buena |
-| small | ~2GB | Media | Muy buena |
-| **medium** | **~5GB** | **Media-lenta** | **Excelente** |
-| large | ~10GB | Lenta | Máxima |
+> **Conclusión:** Si no tienes GPU o no sabes si la tienes, usa `WHISPER_MODEL=small` en el `.env`. Tardará 20-30 minutos por hora de audio, que sigue siendo muy rápido y confiable.
+
+### 🖥️ Comparación de Modelos Whisper
+
+| Modelo | RAM Necesaria | GPU Detectada | Sin GPU (CPU) | Precisión | Recomendado para |
+|--------|---------------|---------------|---------------|-----------|------------------|
+| tiny | ~1GB | Muy rápido | Rápido | Básica | Pruebas |
+| base | ~1GB | Muy rápido | Rápido | Buena | Audio claro |
+| **small** | **~2GB** | **Rápido** | **Aceptable** | **Muy buena** | **PCs sin GPU** ✅ |
+| **medium** | **~5GB** | **Medio** | **Lento** | **Excelente** | **PCs con GPU** ✅ |
+| large | ~10GB | Lento | Muy lento | Máxima | GPUs potentes |
+
+> **¿Cómo saber cuál usar?**
+> - No sabes si tienes GPU → Usa `small` (seguro y rápido)
+> - Tienes GPU NVIDIA (RTX, GTX) → Usa `medium` (mejor calidad)
+> - PC antiguo o básico → Usa `tiny` o `base` (más rápido)
+> 
+> El sistema detecta automáticamente tu hardware y se adapta.
 
 ## Modos de Operación
 

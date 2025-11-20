@@ -4,6 +4,15 @@
 
 > **NOTA:** Este sistema NO funciona en móviles (Android/iOS). Requiere Docker Desktop que solo está disponible para Windows, Mac y Linux.
 
+> **¿Necesito una GPU o tarjeta gráfica especial?**
+> 
+> **NO.** El sistema funciona en cualquier PC moderna:
+> - ✅ Si tienes GPU NVIDIA: se usará automáticamente (más rápido)
+> - ✅ Si NO tienes GPU: usará tu procesador normal (un poco más lento)
+> - ✅ Si no sabes qué tienes: no importa, funcionará igual
+> 
+> El sistema detecta tu hardware automáticamente y se adapta.
+
 ---
 
 ## Paso 0: Instalar Docker Desktop (Solo Primera Vez)
@@ -135,14 +144,16 @@ En PowerShell (en la carpeta del proyecto), escribe:
 
 **¡Listo!** Ya puedes copiar el texto y usarlo donde necesites.
 
-## Modelos Recomendados
+## Modelos Recomendados Según Tu PC
 
-| Situación | Modelo | RAM | Tiempo (1h audio) |
-|-----------|--------|-----|-------------------|
-| Prueba rápida | `tiny` | 1GB | ~5 min |
-| Uso general | `small` | 2GB | ~10 min |
-| **Recomendado** | `medium` | 5GB | ~20 min |
-| Máxima calidad | `large` | 10GB | ~40 min |
+| Situación | Modelo | RAM | Con GPU | Sin GPU (CPU) |
+|-----------|--------|-----|---------|---------------|
+| PC antigua/básica | `tiny` | 1GB | 3 min | 6 min |
+| **No sé si tengo GPU** | **`small`** | **2GB** | **8 min** | **20 min** ✅ |
+| PC moderna con GPU | `medium` | 5GB | 15 min | 40 min |
+| Máxima calidad | `large` | 10GB | 30 min | 90 min |
+
+> **Recomendación:** Si no sabes si tienes GPU o qué modelo usar, deja la configuración por defecto (`small`). Funciona en todos los PCs y da excelentes resultados.
 
 ## Cambiar Configuración
 
