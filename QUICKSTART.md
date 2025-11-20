@@ -1,12 +1,12 @@
-# 🚀 Guía de Inicio Rápido - Para Principiantes
+# Guía de Inicio Rápido - Para Principiantes
 
 **Tiempo estimado:** 15-30 minutos (incluyendo instalación de Docker)
 
-> **⚠️ Solo para PC/Laptop:** Este sistema NO funciona en móviles (Android/iOS). Requiere Docker Desktop que solo está disponible para Windows, Mac y Linux.
+> **NOTA:** Este sistema NO funciona en móviles (Android/iOS). Requiere Docker Desktop que solo está disponible para Windows, Mac y Linux.
 
 ---
 
-## 📋 Paso 0: Instalar Docker Desktop (Solo Primera Vez)
+## Paso 0: Instalar Docker Desktop (Solo Primera Vez)
 
 ### ¿Qué es Docker?
 Docker es un programa que permite ejecutar aplicaciones en "contenedores" aislados. Es como una máquina virtual ligera.
@@ -33,7 +33,7 @@ Docker es un programa que permite ejecutar aplicaciones en "contenedores" aislad
 
 ---
 
-## 📥 Paso 1: Descargar el Proyecto
+## Paso 1: Descargar el Proyecto
 
 ### Opción A: Si tienes Git instalado
 
@@ -67,7 +67,7 @@ Docker es un programa que permite ejecutar aplicaciones en "contenedores" aislad
 
 ---
 
-## ⚙️ Paso 2: Configurar (1 minuto)
+## Paso 2: Configurar (1 minuto)
 
 En la ventana de PowerShell que abriste, ejecuta:
 
@@ -81,7 +81,7 @@ Copy-Item .env.example .env
 
 ---
 
-## 🎵 Paso 3: Agregar tus archivos de audio
+## Paso 3: Agregar tus archivos de audio
 ```powershell
 # Navegar a la carpeta del proyecto (si no estás ahí)
 cd D:\transcriptor  # Cambia por tu ruta
@@ -96,7 +96,7 @@ Copy-Item "D:\Mis Audios\entrevista.mp3" .\input\
 
 ---
 
-## ▶️ Paso 4: Ejecutar la Transcripción
+## Paso 4: Ejecutar la Transcripción
 
 En PowerShell (en la carpeta del proyecto), escribe:
 
@@ -115,18 +115,20 @@ En PowerShell (en la carpeta del proyecto), escribe:
 
 ---
 
-## 📂 Paso 5: Ver tus Transcripciones
+## Paso 5: Ver tus Transcripciones
 
 1. Abre la carpeta `output` del proyecto
-2. Encontrarás 3 archivos por cada audio:
-
+2. Encontrarás hasta 6 archivos por cada audio:
    - `nombre_transcripcion.txt` → **Texto limpio** (úsalo para leer)
    - `nombre_transcripcion_detallada.txt` → Con marcas de tiempo
    - `nombre_transcripcion_formateada.txt` → Formateado profesional
+   - `nombre_resumen.txt` → Resumen ejecutivo
+   - `nombre_puntos_clave.txt` → Puntos importantes
+   - `nombre_temas.txt` → Temas principales
 
 **¡Listo!** Ya puedes copiar el texto y usarlo donde necesites.
 
-## 📊 Modelos Recomendados
+## Modelos Recomendados
 
 | Situación | Modelo | RAM | Tiempo (1h audio) |
 |-----------|--------|-----|-------------------|
@@ -135,7 +137,7 @@ En PowerShell (en la carpeta del proyecto), escribe:
 | **Recomendado** | `medium` | 5GB | ~20 min |
 | Máxima calidad | `large` | 10GB | ~40 min |
 
-## 🔧 Cambiar Configuración
+## Cambiar Configuración
 
 Edita `.env`:
 ```env
@@ -147,14 +149,20 @@ WHISPER_MODEL=small
 
 # Cambiar idioma
 AUDIO_LANGUAGE=en
+
+# Desactivar análisis avanzado
+ENABLE_SUMMARY=false
+ENABLE_KEY_POINTS=false
+ENABLE_TOPICS=false
 ```
 
-## 🧹 Limpiar todo
+## Limpiar todo
+
 ```powershell
 .\clean.ps1
 ```
 
-## ❓ Problemas Comunes
+## Problemas Comunes
 
 **Error de memoria**: Usa un modelo más pequeño
 ```env

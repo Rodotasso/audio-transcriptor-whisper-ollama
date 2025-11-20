@@ -2,36 +2,36 @@
 
 Sistema completo basado en Docker para **transcribir y formatear archivos de audio de larga duración** usando Whisper (transcripción) y Ollama (formateo local con LLM).
 
-## ✨ Características
+## Características
 
-- 🚀 **100% Local y Gratuito** - Sin APIs de pago ni conexión a internet (después de setup inicial)
-- 🐳 **Dockerizado** - Funciona en cualquier computador con Docker
-- 🎯 **Reproducible** - Clone y ejecute en minutos
-- 🔄 **Inteligente** - Salta archivos ya transcritos automáticamente
-- 📝 **Formateo Profesional** - Usa LLM local (Ollama) para limpiar y estructurar el texto
-- 📊 **Análisis Automático** - Genera resúmenes, puntos clave y temas principales
-- 🌍 **Multiidioma** - Soporta español, inglés y más de 90 idiomas
-- ⚙️ **Totalmente Configurable** - Activa/desactiva cada función según necesites
+- **100% Local y Gratuito** - Sin APIs de pago ni conexión a internet (después de setup inicial)
+- **Dockerizado** - Funciona en cualquier computador con Docker
+- **Reproducible** - Clone y ejecute en minutos
+- **Inteligente** - Salta archivos ya transcritos automáticamente
+- **Formateo Profesional** - Usa LLM local (Ollama) para limpiar y estructurar el texto
+- **Análisis Automático** - Genera resúmenes, puntos clave y temas principales
+- **Multiidioma** - Soporta español, inglés y más de 90 idiomas
+- **Totalmente Configurable** - Activa/desactiva cada función según necesites
 
 ## 🚀 Inicio Rápido
 
-> **📥 ¿Qué se descarga en la primera ejecución?**
+> **¿Qué se descarga en la primera ejecución?**
 > 
 > En la **primera vez que ejecutes** el sistema, Docker descargará automáticamente:
-> - **Modelos de IA de Whisper** (~1-5GB según tu configuración)
-> - **Modelo de Ollama (LLM)** (~2GB)
-> - **Imágenes Docker base** (~1GB)
+> - Modelos de IA de Whisper (~1-5GB según tu configuración)
+> - Modelo de Ollama LLM (~2GB)
+> - Imágenes Docker base (~1GB)
 > 
-> **Total: ~5-7GB | Tiempo estimado: 15-30 minutos** ⏱️
+> **Total: ~5-7GB | Tiempo estimado: 15-30 minutos**
 > 
-> ✅ **Esto solo ocurre una vez.** Después, todo funciona offline y de forma instantánea.
+> **Esto solo ocurre una vez.** Después, todo funciona offline y de forma instantánea.
 
 ### Requisitos Previos
 
-> **⚠️ Solo PC/Laptop:** Este sistema requiere Docker Desktop y NO funciona en móviles (Android/iOS).
+> **NOTA:** Este sistema requiere Docker Desktop y NO funciona en móviles (Android/iOS).
 
 - **Windows 10/11** (con PowerShell) o Mac/Linux
-- **[Docker Desktop](https://www.docker.com/products/docker-desktop)** instalado → [¿Cómo instalar?](#-instalación-de-docker)
+- **[Docker Desktop](https://www.docker.com/products/docker-desktop)** instalado → [¿Cómo instalar?](#instalación-de-docker)
 - **8GB RAM** mínimo (16GB recomendado)
 - **10GB espacio** en disco libre (para modelos)
 
@@ -51,15 +51,15 @@ Copy-Item .env.example .env
 
 **¡Listo!** El sistema descargará los modelos automáticamente en la primera ejecución.
 
-> **📥 Primera ejecución:** Docker descargará automáticamente:
+> **Primera ejecución:** Docker descargará automáticamente:
 > - Modelos de Whisper (~1-5GB según configuración)
 > - Modelo Ollama (~2GB)
 > - **Total: ~5-7GB | Tiempo: 15-30 minutos**
-> - Solo se descarga una vez, después es instantáneo ⚡
+> - Solo se descarga una vez, después es instantáneo
 
-> **🆕 ¿Primera vez con Docker?** Ve a la [Guía de Inicio Rápido](QUICKSTART.md) con explicaciones paso a paso.
+> **¿Primera vez con Docker?** Ve a la [Guía de Inicio Rápido](QUICKSTART.md) con explicaciones paso a paso.
 
-## 🐳 Instalación de Docker
+## Instalación de Docker
 
 Si **no tienes Docker instalado**, sigue estos pasos:
 
@@ -72,7 +72,7 @@ Si **no tienes Docker instalado**, sigue estos pasos:
 
 ### ¿Funciona en móviles?
 
-**❌ No.** Este sistema requiere:
+**No.** Este sistema requiere:
 - Docker Desktop (no disponible en Android/iOS)
 - Procesamiento intensivo (modelos de IA de varios GB)
 - Mínimo 8GB RAM
@@ -84,7 +84,7 @@ Si **no tienes Docker instalado**, sigue estos pasos:
 
 ---
 
-## 📖 Uso
+## Uso
 
 ### Transcribir Audio
 
@@ -108,31 +108,31 @@ output/
 ├── entrevista_transcripcion.txt               # Transcripción limpia
 ├── entrevista_transcripcion_detallada.txt     # Con timestamps
 ├── entrevista_transcripcion_formateada.txt    # Formateado con LLM
-├── entrevista_resumen.txt                     # 📊 Resumen ejecutivo
-├── entrevista_puntos_clave.txt                # 🔑 Puntos importantes
-├── entrevista_temas.txt                       # 🏷️ Temas principales
+├── entrevista_resumen.txt                     # Resumen ejecutivo
+├── entrevista_puntos_clave.txt                # Puntos importantes
+├── entrevista_temas.txt                       # Temas principales
 ├── conferencia_transcripcion.txt
 ├── conferencia_transcripcion_detallada.txt
 ├── conferencia_transcripcion_formateada.txt
-├── conferencia_resumen.txt                    # 📊 Resumen ejecutivo
-├── conferencia_puntos_clave.txt               # 🔑 Puntos importantes
-└── conferencia_temas.txt                      # 🏷️ Temas principales
+├── conferencia_resumen.txt                    # Resumen ejecutivo
+├── conferencia_puntos_clave.txt               # Puntos importantes
+└── conferencia_temas.txt                      # Temas principales
 ```
 
-### 📊 Archivos Generados por Audio
+### Archivos Generados por Audio
 
 Por cada archivo de audio, el sistema genera **hasta 6 archivos de salida**:
 
 | Archivo | Descripción | Siempre se genera |
 |---------|-------------|-------------------|
-| `*_transcripcion.txt` | Texto limpio sin timestamps | ✅ Sí |
-| `*_transcripcion_detallada.txt` | Con timestamps de Whisper | ✅ Sí |
-| `*_transcripcion_formateada.txt` | Formateado y estructurado con LLM | ✅ Sí (si FORMATTER activo) |
-| `*_resumen.txt` | Resumen ejecutivo de 3-5 párrafos | ⚙️ Configurable (`ENABLE_SUMMARY`) |
-| `*_puntos_clave.txt` | Lista de puntos más importantes | ⚙️ Configurable (`ENABLE_KEY_POINTS`) |
-| `*_temas.txt` | Temas principales discutidos | ⚙️ Configurable (`ENABLE_TOPICS`) |
+| `*_transcripcion.txt` | Texto limpio sin timestamps | Sí |
+| `*_transcripcion_detallada.txt` | Con timestamps de Whisper | Sí |
+| `*_transcripcion_formateada.txt` | Formateado y estructurado con LLM | Sí (si FORMATTER activo) |
+| `*_resumen.txt` | Resumen ejecutivo de 3-5 párrafos | Configurable (`ENABLE_SUMMARY`) |
+| `*_puntos_clave.txt` | Lista de puntos más importantes | Configurable (`ENABLE_KEY_POINTS`) |
+| `*_temas.txt` | Temas principales discutidos | Configurable (`ENABLE_TOPICS`) |
 
-## ⚙️ Configuración
+## Configuración
 
 Edita el archivo `.env` para personalizar:
 
@@ -155,7 +155,7 @@ ENABLE_KEY_POINTS=true   # Puntos clave
 ENABLE_TOPICS=true       # Temas principales
 ```
 
-### 🎯 Configurar Análisis Avanzado
+### Configurar Análisis Avanzado
 
 El sistema puede generar **automáticamente** análisis adicionales de cada transcripción. Controla qué se genera:
 
@@ -176,19 +176,37 @@ ENABLE_KEY_POINTS=false
 ENABLE_TOPICS=false
 ```
 
-**⏱️ Tiempo adicional:** Cada análisis toma ~2-5 minutos extra por audio (dependiendo de duración).
+**Tiempo adicional:** Cada análisis toma ~2-5 minutos extra por audio (dependiendo de duración).
+
+### Tiempos de Procesamiento (Audio de 1 hora)
+
+| Modelo Whisper | Con GPU | Sin GPU | Precisión | Uso Recomendado |
+|----------------|---------|---------|-----------|-----------------|
+| tiny | 2-3 min | 5-8 min | Básica | Pruebas rápidas |
+| base | 3-5 min | 8-12 min | Buena | Audio claro |
+| small | 5-10 min | 15-25 min | Muy buena | **Balance velocidad/calidad** |
+| **medium** | **10-20 min** | **30-50 min** | **Excelente** | **Recomendado** |
+| large | 20-40 min | 60-120 min | Máxima | Producción profesional |
+
+**Análisis Ollama (adicional):**
+- Formateo: ~2-3 min
+- Resumen: ~3-5 min
+- Puntos clave: ~2-4 min
+- Temas: ~1-2 min
+
+**Tiempo total (medium + análisis completo):** 18-34 min con GPU | 38-64 min sin GPU
 
 ### Comparación de Modelos Whisper
 
-| Modelo | RAM | Velocidad | Precisión | Uso |
-|--------|-----|-----------|-----------|-----|
-| tiny | ~1GB | ⚡⚡⚡⚡⚡ | ⭐⭐ | Pruebas rápidas |
-| base | ~1GB | ⚡⚡⚡⚡ | ⭐⭐⭐ | Audio claro |
-| small | ~2GB | ⚡⚡⚡ | ⭐⭐⭐⭐ | Balance |
-| **medium** | ~5GB | ⚡⚡ | ⭐⭐⭐⭐⭐ | **Recomendado** |
-| large | ~10GB | ⚡ | ⭐⭐⭐⭐⭐ | Máxima calidad |
+| Modelo | RAM | Velocidad | Precisión |
+|--------|-----|-----------|-----------|
+| tiny | ~1GB | Muy rápida | Básica |
+| base | ~1GB | Rápida | Buena |
+| small | ~2GB | Media | Muy buena |
+| **medium** | **~5GB** | **Media-lenta** | **Excelente** |
+| large | ~10GB | Lenta | Máxima |
 
-## 🎯 Modos de Operación
+## Modos de Operación
 
 El sistema tiene 3 modos configurables en `.env`:
 
@@ -198,7 +216,7 @@ MODE=transcribe-only   # Solo transcribe
 MODE=format-only       # Solo formatea archivos existentes
 ```
 
-## 🐳 Comandos Docker
+## Comandos Docker
 
 ```powershell
 # Ver logs en tiempo real
@@ -214,7 +232,7 @@ docker-compose build --no-cache
 .\clean.ps1
 ```
 
-## 📊 Arquitectura
+## Arquitectura
 
 ```
 ┌─────────────────────────────────────┐
@@ -237,14 +255,14 @@ docker-compose build --no-cache
     input/         output/
 ```
 
-## 📚 Documentación Adicional
+## Documentación Adicional
 
 - **[QUICKSTART.md](QUICKSTART.md)** - Guía de inicio rápido
 - **[PROYECTO.md](PROYECTO.md)** - Arquitectura detallada
 - **[WORKFLOW.md](WORKFLOW.md)** - Flujo de trabajo interno
 - **[DISTRIBUCION.md](DISTRIBUCION.md)** - Cómo compartir el sistema
 
-## 🔧 Scripts Disponibles
+## Scripts Disponibles
 
 | Script | Descripción |
 |--------|-------------|
@@ -254,19 +272,21 @@ docker-compose build --no-cache
 | `build-package.ps1` | Empaqueta el sistema para distribución |
 | `volume-manager.ps1` | Exporta/importa modelos descargados |
 
-## 🌐 Formateo Local vs API
+## Formateo Local vs API
 
 ### Ollama (Local - Recomendado)
-- ✅ 100% gratuito
-- ✅ Privado (datos no salen de tu computador)
-- ✅ Sin límites de uso
-- ⚠️ Requiere ~4GB RAM adicional
+
+- 100% gratuito
+- Privado (datos no salen de tu computador)
+- Sin límites de uso
+- Requiere ~4GB RAM adicional
 
 ### Gemini (API)
-- ⚠️ Requiere cuenta de Google y API key
-- ⚠️ Tiene costos según uso
-- ✅ Resultados de mayor calidad
-- ✅ No requiere recursos locales
+
+- Requiere cuenta de Google y API key
+- Tiene costos según uso
+- Resultados de mayor calidad
+- No requiere recursos locales
 
 Para usar Gemini, cambia en `.env`:
 ```env
@@ -274,15 +294,17 @@ FORMATTER=gemini
 GOOGLE_API_KEY=tu_clave_aqui
 ```
 
-## 🐛 Solución de Problemas
+## Solución de Problemas
 
 ### "Docker no encontrado"
+
 ```powershell
 # Instalar Docker Desktop desde:
 # https://www.docker.com/products/docker-desktop
 ```
 
 ### "Out of memory"
+
 ```powershell
 # Cambiar a modelo más ligero en .env
 WHISPER_MODEL=small
@@ -290,6 +312,7 @@ OLLAMA_MODEL=llama3.2:1b
 ```
 
 ### "Puerto 11434 en uso"
+
 ```powershell
 # Detener otros servicios Ollama
 docker-compose down
@@ -297,12 +320,13 @@ docker ps -a | grep ollama
 ```
 
 ### Transcripción de mala calidad
+
 ```powershell
 # Usar modelo más grande en .env
 WHISPER_MODEL=large
 ```
 
-## 🤝 Contribuir
+## Contribuir
 
 ¡Contribuciones son bienvenidas! Por favor:
 
@@ -312,17 +336,17 @@ WHISPER_MODEL=large
 4. Push: `git push origin feature/nueva-caracteristica`
 5. Abre un Pull Request
 
-## 📄 Licencia
+## Licencia
 
 Este proyecto está bajo licencia MIT. Ver archivo `LICENSE` para más detalles.
 
-## ⭐ Créditos
+## Créditos
 
 - [OpenAI Whisper](https://github.com/openai/whisper) - Motor de transcripción
 - [Ollama](https://ollama.ai/) - LLM local para formateo
 - [FFmpeg](https://ffmpeg.org/) - Procesamiento de audio
 
-## 📞 Soporte
+## Soporte
 
 ¿Problemas o preguntas? Abre un [issue en GitHub](https://github.com/TU_USUARIO/NOMBRE_REPO/issues).
 
