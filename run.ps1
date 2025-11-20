@@ -111,7 +111,8 @@ Write-Host ""
 # Iniciar solo el servicio Ollama
 Write-Host "Iniciando servicio Ollama..." -ForegroundColor Cyan
 docker-compose up -d ollama
-Start-Sleep -Seconds 10
+Write-Host "Esperando a que Ollama esté listo..." -ForegroundColor Cyan
+Start-Sleep -Seconds 15
 
 # Verificar si el modelo está instalado
 Write-Host ""
