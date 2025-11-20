@@ -1,0 +1,51 @@
+# No incluir archivos sensibles en el repositorio
+.env
+.env.local
+
+# Directorios de trabajo
+input/
+output/
+logs/
+*.log
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+dist/
+build/
+
+# Modelos de Whisper (se descargan automáticamente)
+*.pt
+
+# Archivos grandes de Docker (NO subir a GitHub)
+*.tar
+*.tar.gz
+package/
+volume-backup/
+modelos/
+
+# Compresiones y archivos temporales
+*.zip
+*.rar
+*.7z
+transcriptor-*.zip
+Copia_de_*.ipynb
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Sistema
+.DS_Store
+Thumbs.db
+
+# Archivos de audio temporales
+*.tmp
+*.temp

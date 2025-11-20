@@ -1,0 +1,281 @@
+# 🎤 Sistema de Transcripción y Formateo de Audio
+
+Sistema completo basado en Docker para **transcribir y formatear archivos de audio de larga duración** usando Whisper (transcripción) y Ollama (formateo local con LLM).
+
+## ✨ Características
+
+- 🚀 **100% Local y Gratuito** - Sin APIs de pago ni conexión a internet (después de setup inicial)
+- 🐳 **Dockerizado** - Funciona en cualquier computador con Docker
+- 🎯 **Reproducible** - Clone y ejecute en minutos
+- 🔄 **Inteligente** - Salta archivos ya transcritos automáticamente
+- 📝 **Formateo Profesional** - Usa LLM local (Ollama) para limpiar y estructurar el texto
+- 🌍 **Multiidioma** - Soporta español, inglés y más de 90 idiomas
+
+## 🚀 Inicio Rápido
+
+> **📥 ¿Qué se descarga en la primera ejecución?**
+> 
+> En la **primera vez que ejecutes** el sistema, Docker descargará automáticamente:
+> - **Modelos de IA de Whisper** (~1-5GB según tu configuración)
+> - **Modelo de Ollama (LLM)** (~2GB)
+> - **Imágenes Docker base** (~1GB)
+> 
+> **Total: ~5-7GB | Tiempo estimado: 15-30 minutos** ⏱️
+> 
+> ✅ **Esto solo ocurre una vez.** Después, todo funciona offline y de forma instantánea.
+
+### Requisitos Previos
+
+> **⚠️ Solo PC/Laptop:** Este sistema requiere Docker Desktop y NO funciona en móviles (Android/iOS).
+
+- **Windows 10/11** (con PowerShell) o Mac/Linux
+- **[Docker Desktop](https://www.docker.com/products/docker-desktop)** instalado → [¿Cómo instalar?](#-instalación-de-docker)
+- **8GB RAM** mínimo (16GB recomendado)
+- **10GB espacio** en disco libre (para modelos)
+
+### Instalación en 3 Pasos
+
+```powershell
+# 1. Clonar repositorio (o descargar ZIP desde GitHub)
+git clone https://github.com/TU_USUARIO/NOMBRE_REPO.git
+cd NOMBRE_REPO
+
+# 2. Configurar (copia la plantilla de configuración)
+Copy-Item .env.example .env
+
+# 3. Ejecutar (¡ya está!)
+.\run.ps1
+```
+
+**¡Listo!** El sistema descargará los modelos automáticamente en la primera ejecución.
+
+> **📥 Primera ejecución:** Docker descargará automáticamente:
+> - Modelos de Whisper (~1-5GB según configuración)
+> - Modelo Ollama (~2GB)
+> - **Total: ~5-7GB | Tiempo: 15-30 minutos**
+> - Solo se descarga una vez, después es instantáneo ⚡
+
+> **🆕 ¿Primera vez con Docker?** Ve a la [Guía de Inicio Rápido](QUICKSTART.md) con explicaciones paso a paso.
+
+## 🐳 Instalación de Docker
+
+Si **no tienes Docker instalado**, sigue estos pasos:
+
+1. **Descargar:** Ve a https://www.docker.com/products/docker-desktop
+2. **Instalar:** Ejecuta el instalador y sigue las instrucciones
+3. **Reiniciar:** Reinicia tu computador cuando termine
+4. **Verificar:** Abre Docker Desktop y espera a que diga "Docker is running"
+
+> **Windows Home:** Docker Desktop requiere WSL2. El instalador lo configurará automáticamente.
+
+### ¿Funciona en móviles?
+
+**❌ No.** Este sistema requiere:
+- Docker Desktop (no disponible en Android/iOS)
+- Procesamiento intensivo (modelos de IA de varios GB)
+- Mínimo 8GB RAM
+
+**Alternativas para móviles:**
+- Usa servicios en línea como Google Speech-to-Text, Otter.ai, o Rev
+- Transfiere el audio a tu PC y usa este sistema
+- Usa apps móviles específicas como Transcribe, Rev Voice Recorder
+
+---
+
+## 📖 Uso
+
+### Transcribir Audio
+
+1. Coloca archivos de audio (`.mp3`, `.m4a`, `.wav`, etc.) en la carpeta `input/`
+2. Ejecuta `.\run.ps1` en PowerShell
+3. Encuentra las transcripciones en `output/`
+
+### Ejemplo
+
+```powershell
+# Estructura antes
+input/
+├── entrevista.m4a
+└── conferencia.mp3
+
+# Ejecutar
+.\run.ps1
+
+# Estructura después
+output/
+├── entrevista_transcripcion.txt          # Texto limpio
+├── entrevista_transcripcion_detallada.txt # Con timestamps
+├── entrevista_transcripcion_formateada.txt # Formateado con LLM
+├── conferencia_transcripcion.txt
+└── ...
+```
+
+## ⚙️ Configuración
+
+Edita el archivo `.env` para personalizar:
+
+```env
+# Modelo de Whisper (velocidad vs calidad)
+WHISPER_MODEL=medium  # tiny, base, small, medium, large
+
+# Idioma del audio
+AUDIO_LANGUAGE=es     # es, en, fr, etc.
+
+# Motor de formateo
+FORMATTER=ollama      # ollama (local) o gemini (API)
+
+# Modelo de Ollama
+OLLAMA_MODEL=llama3.2:3b  # llama3.2:1b, llama3:8b, mistral
+```
+
+### Comparación de Modelos Whisper
+
+| Modelo | RAM | Velocidad | Precisión | Uso |
+|--------|-----|-----------|-----------|-----|
+| tiny | ~1GB | ⚡⚡⚡⚡⚡ | ⭐⭐ | Pruebas rápidas |
+| base | ~1GB | ⚡⚡⚡⚡ | ⭐⭐⭐ | Audio claro |
+| small | ~2GB | ⚡⚡⚡ | ⭐⭐⭐⭐ | Balance |
+| **medium** | ~5GB | ⚡⚡ | ⭐⭐⭐⭐⭐ | **Recomendado** |
+| large | ~10GB | ⚡ | ⭐⭐⭐⭐⭐ | Máxima calidad |
+
+## 🎯 Modos de Operación
+
+El sistema tiene 3 modos configurables en `.env`:
+
+```env
+MODE=full              # Transcribe + formatea (por defecto)
+MODE=transcribe-only   # Solo transcribe
+MODE=format-only       # Solo formatea archivos existentes
+```
+
+## 🐳 Comandos Docker
+
+```powershell
+# Ver logs en tiempo real
+docker-compose logs -f
+
+# Detener servicios
+docker-compose down
+
+# Reconstruir desde cero
+docker-compose build --no-cache
+
+# Limpiar todo y empezar de nuevo
+.\clean.ps1
+```
+
+## 📊 Arquitectura
+
+```
+┌─────────────────────────────────────┐
+│  Docker Compose                     │
+│  ┌───────────────────────────────┐  │
+│  │  Servicio: Ollama             │  │
+│  │  - LLM local (llama3.2:3b)    │  │
+│  │  - Puerto: 11434              │  │
+│  │  - Formateo de texto          │  │
+│  └───────────────────────────────┘  │
+│              ↓                      │
+│  ┌───────────────────────────────┐  │
+│  │  Servicio: Audio Transcriber  │  │
+│  │  - Whisper (transcripción)    │  │
+│  │  - FFmpeg (audio processing)  │  │
+│  │  - Python 3.10                │  │
+│  └───────────────────────────────┘  │
+└─────────────────────────────────────┘
+         ↓              ↓
+    input/         output/
+```
+
+## 📚 Documentación Adicional
+
+- **[QUICKSTART.md](QUICKSTART.md)** - Guía de inicio rápido
+- **[PROYECTO.md](PROYECTO.md)** - Arquitectura detallada
+- **[WORKFLOW.md](WORKFLOW.md)** - Flujo de trabajo interno
+- **[DISTRIBUCION.md](DISTRIBUCION.md)** - Cómo compartir el sistema
+
+## 🔧 Scripts Disponibles
+
+| Script | Descripción |
+|--------|-------------|
+| `run.ps1` | **Ejecuta el sistema** (menú interactivo) |
+| `verify.ps1` | Verifica que Docker esté correctamente instalado |
+| `clean.ps1` | Limpia contenedores, imágenes y volúmenes |
+| `build-package.ps1` | Empaqueta el sistema para distribución |
+| `volume-manager.ps1` | Exporta/importa modelos descargados |
+
+## 🌐 Formateo Local vs API
+
+### Ollama (Local - Recomendado)
+- ✅ 100% gratuito
+- ✅ Privado (datos no salen de tu computador)
+- ✅ Sin límites de uso
+- ⚠️ Requiere ~4GB RAM adicional
+
+### Gemini (API)
+- ⚠️ Requiere cuenta de Google y API key
+- ⚠️ Tiene costos según uso
+- ✅ Resultados de mayor calidad
+- ✅ No requiere recursos locales
+
+Para usar Gemini, cambia en `.env`:
+```env
+FORMATTER=gemini
+GOOGLE_API_KEY=tu_clave_aqui
+```
+
+## 🐛 Solución de Problemas
+
+### "Docker no encontrado"
+```powershell
+# Instalar Docker Desktop desde:
+# https://www.docker.com/products/docker-desktop
+```
+
+### "Out of memory"
+```powershell
+# Cambiar a modelo más ligero en .env
+WHISPER_MODEL=small
+OLLAMA_MODEL=llama3.2:1b
+```
+
+### "Puerto 11434 en uso"
+```powershell
+# Detener otros servicios Ollama
+docker-compose down
+docker ps -a | grep ollama
+```
+
+### Transcripción de mala calidad
+```powershell
+# Usar modelo más grande en .env
+WHISPER_MODEL=large
+```
+
+## 🤝 Contribuir
+
+¡Contribuciones son bienvenidas! Por favor:
+
+1. Fork el proyecto
+2. Crea una rama: `git checkout -b feature/nueva-caracteristica`
+3. Commit cambios: `git commit -m 'Agregar nueva característica'`
+4. Push: `git push origin feature/nueva-caracteristica`
+5. Abre un Pull Request
+
+## 📄 Licencia
+
+Este proyecto está bajo licencia MIT. Ver archivo `LICENSE` para más detalles.
+
+## ⭐ Créditos
+
+- [OpenAI Whisper](https://github.com/openai/whisper) - Motor de transcripción
+- [Ollama](https://ollama.ai/) - LLM local para formateo
+- [FFmpeg](https://ffmpeg.org/) - Procesamiento de audio
+
+## 📞 Soporte
+
+¿Problemas o preguntas? Abre un [issue en GitHub](https://github.com/TU_USUARIO/NOMBRE_REPO/issues).
+
+---
+
+**Hecho con ❤️ para facilitar la transcripción de audio de larga duración**

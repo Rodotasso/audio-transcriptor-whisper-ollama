@@ -1,0 +1,11 @@
+whisper
+openai-whisper
+torch
+torchaudio
+transformers
+google-generativeai
+ffmpeg-python
+numpy
+scipy
+requests
+urllib3

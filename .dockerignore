@@ -1,0 +1,60 @@
+# Ignorar archivos innecesarios en la imagen Docker
+
+# Directorios de trabajo
+input/
+output/
+logs/
+
+# Git
+.git/
+.gitignore
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+dist/
+build/
+
+# Entornos virtuales
+venv/
+env/
+ENV/
+
+# Configuración local
+.env
+.env.local
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Documentación
+README.md
+QUICKSTART.md
+*.md
+
+# Scripts de utilidad (no necesarios dentro del contenedor)
+run.ps1
+clean.ps1
+verify.ps1
+
+# Notebook original
+*.ipynb
+
+# Sistema
+.DS_Store
+Thumbs.db
+
+# Modelos de Whisper descargados localmente
+*.pt
+
+# Docker
+docker-compose.yml
+Dockerfile
+.dockerignore

@@ -1,0 +1,78 @@
+services:
+  # Servicio Ollama para formateo local (alternativa a Gemini)
+  ollama:
+    image: ollama/ollama:latest
+    container_name: ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama-data:/root/.ollama
+    environment:
+      - OLLAMA_HOST=0.0.0.0
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 4G
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:11434/api/tags"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Servicio principal de transcripción
+  audio-transcriber:
+    build: .
+    container_name: audio-transcriber
+    depends_on:
+      ollama:
+        condition: service_healthy
+    env_file:
+      - .env
+    environment:
+      # Modo de ejecución: 'full' (transcribir + formatear), 'transcribe-only', 'format-only'
+      - MODE=${MODE:-full}
+      # Motor de formateo: 'ollama' (local, recomendado) o 'gemini' (requiere API key)
+      - FORMATTER=${FORMATTER:-ollama}
+      # Modelo de Whisper: tiny, base, small, medium, large
+      - WHISPER_MODEL=${WHISPER_MODEL:-medium}
+      # Idioma del audio (código ISO)
+      - AUDIO_LANGUAGE=${AUDIO_LANGUAGE:-es}
+      # Modelo de Ollama (para formateo local)
+      - OLLAMA_MODEL=${OLLAMA_MODEL:-llama3.2:3b}
+      - OLLAMA_HOST=http://ollama:11434
+      # Modelo de Gemini (solo si FORMATTER=gemini)
+      - GEMINI_MODEL=${GEMINI_MODEL:-gemini-1.5-pro-latest}
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY}
+      # Directorios internos
+      - INPUT_DIR=/app/input
+      - OUTPUT_DIR=/app/output
+      # Configuración de GPU
+      - USE_GPU=${USE_GPU:-auto}
+      - GPU_MEMORY_LIMIT=${GPU_MEMORY_LIMIT:-2048}
+    volumes:
+      # Monta el directorio de archivos de audio locales
+      - ./input:/app/input
+      # Monta el directorio donde se guardarán las transcripciones
+      - ./output:/app/output
+      # Monta el directorio de logs
+      - ./logs:/app/logs
+    deploy:
+      resources:
+        # Limitar recursos (opcional, ajusta según tu hardware)
+        limits:
+          cpus: '4'
+          memory: 8G
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+
+volumes:
+  ollama-data:
