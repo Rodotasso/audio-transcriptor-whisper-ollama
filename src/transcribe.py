@@ -178,21 +178,14 @@ class AudioTranscriber:
         logger.info(f"Tamaño del archivo: {audio_path.stat().st_size / (1024*1024):.2f} MB")
         
         try:
-            # Transcribir el archivo con parámetros optimizados para español chileno
-            # fp16=False para compatibilidad con CPUs
+            # Transcribir el archivo - configuración simple y estable
+            # Similar a la configuración de Colab que funcionaba bien
             result = self.model.transcribe(
                 str(audio_path),
                 language=self.language,
                 fp16=False,
                 verbose=True,
-                initial_prompt=self.initial_prompt,  # Contexto chileno
-                temperature=0.2,  # Pequeña variación para evitar loops (antes era 0.0)
-                beam_size=5,  # Búsqueda más exhaustiva
-                best_of=5,  # Mejores candidatos
-                condition_on_previous_text=False,  # Desactivado para evitar loops de repetición
-                compression_ratio_threshold=2.4,  # Detectar repeticiones
-                logprob_threshold=-1.0,  # Umbral de confianza
-                no_speech_threshold=0.6  # Detectar silencio
+                initial_prompt=self.initial_prompt  # Contexto chileno (opcional, no invasivo)
             )
             
             transcription_text = result["text"]
