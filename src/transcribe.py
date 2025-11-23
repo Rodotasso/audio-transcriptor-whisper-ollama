@@ -186,10 +186,10 @@ class AudioTranscriber:
                 fp16=False,
                 verbose=True,
                 initial_prompt=self.initial_prompt,  # Contexto chileno
-                temperature=0.0,  # Más determinístico para mayor precisión
+                temperature=0.2,  # Pequeña variación para evitar loops (antes era 0.0)
                 beam_size=5,  # Búsqueda más exhaustiva
                 best_of=5,  # Mejores candidatos
-                condition_on_previous_text=True,  # Mantener contexto entre segmentos
+                condition_on_previous_text=False,  # Desactivado para evitar loops de repetición
                 compression_ratio_threshold=2.4,  # Detectar repeticiones
                 logprob_threshold=-1.0,  # Umbral de confianza
                 no_speech_threshold=0.6  # Detectar silencio
